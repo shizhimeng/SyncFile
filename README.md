@@ -28,7 +28,7 @@
 ## 📝 TODO
 
 - [ ] 支持 iOS 手机
-- [x] 支持 macOS 电脑
+- [ ] 支持 macOS 电脑
 
 
 
