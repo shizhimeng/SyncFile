@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>我们需要访问您的局域网以发现和连接其他设备进行文件传输。</string>
 </dict>
 </plist>

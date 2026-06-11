@@ -286,6 +286,34 @@ class LanService {
         includeLoopback: false,
         type: InternetAddressType.IPv4,
       );
+      
+      // 优先寻找物理网卡（排除虚拟网卡）
+      for (var interface in interfaces) {
+        final name = interface.name.toLowerCase();
+        // 过滤掉常见的虚拟网卡和 VPN 接口
+        if (name.contains('virtual') ||
+            name.contains('vbox') ||
+            name.contains('vmware') ||
+            name.contains('wsl') ||
+            name.contains('hyper-v') ||
+            name.contains('host-only') ||
+            name.contains('tap-') ||
+            name.contains('vpn') ||
+            name.contains('npcap')) {
+          continue;
+        }
+
+        for (var addr in interface.addresses) {
+          if (!addr.isLoopback &&
+              (addr.address.startsWith('192.168.') ||
+               addr.address.startsWith('10.') ||
+               addr.address.startsWith('172.'))) {
+            return addr.address;
+          }
+        }
+      }
+
+      // 如果过滤后没找到，再降级允许所有非回环地址
       for (var interface in interfaces) {
         for (var addr in interface.addresses) {
           if (!addr.isLoopback &&
@@ -296,6 +324,7 @@ class LanService {
           }
         }
       }
+
       if (interfaces.isNotEmpty && interfaces.first.addresses.isNotEmpty) {
         return interfaces.first.addresses.first.address;
       }
